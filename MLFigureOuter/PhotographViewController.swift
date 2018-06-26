@@ -28,6 +28,7 @@ class PhotographViewController: UIViewController, AVCapturePhotoCaptureDelegate 
             guard let captureDevice = captureDevice else { return }
             let input = try AVCaptureDeviceInput(device: captureDevice)
             captureSession = AVCaptureSession()
+            captureSession.sessionPreset = AVCaptureSession.Preset.photo
             captureSession.addInput(input)
         }
         catch {
@@ -51,7 +52,10 @@ class PhotographViewController: UIViewController, AVCapturePhotoCaptureDelegate 
     
     @IBAction func takePhotoPressed(_ sender: UIButton) {
         let settings = AVCapturePhotoSettings()
-        
+        let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first!
+        let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewPixelType, kCVPixelBufferWidthKey as String: 160, kCVPixelBufferHeightKey as String: 160]
+        settings.previewPhotoFormat = previewFormat
+
         cameraOutput.capturePhoto(with: settings, delegate: self)
     }
     
@@ -61,21 +65,79 @@ class PhotographViewController: UIViewController, AVCapturePhotoCaptureDelegate 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        if let productResultsVC = segue.destination as? ProductMLResultsViewController {
+            productResultsVC.predictionOutput = predictionOutput
+        }
         
     }
 
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        guard error == nil else {
-            print(error!.localizedDescription)
+//    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+//        guard error == nil else {
+//            print(error!.localizedDescription)
+//            return
+//        }
+//
+//        guard let data = photo.fileDataRepresentation() else { return }
+//        let imageToDisplay = UIImage(data: data)
+//        guard let pixelBuffer = photo.pixelBuffer else { return }
+//
+//        let predictionInput = ShoesAndHandbagsPhase2Input(image: pixelBuffer)
+//        predictionOutput = try? ShoesAndHandbagsPhase2().prediction(input: predictionInput)
+//        performSegue(withIdentifier: "showProductMLDetails", sender: nil)
+//    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+        
+        guard error == nil, let photoSampleBuffer = photoSampleBuffer, let previewPhotoSampleBuffer = previewPhotoSampleBuffer else {
+            print("error: \(error!.localizedDescription)")
             return
         }
-        
-        guard let data = photo.fileDataRepresentation() else { return }
-        let imageToDisplay = UIImage(data: data)
-        guard let pixelBuffer = photo.pixelBuffer else { return }
-        
-        let predictionInput = ShoesAndHandbagsPhase2Input(image: pixelBuffer)
-        predictionOutput = try? ShoesAndHandbagsPhase2().prediction(input: predictionInput)
-        performSegue(withIdentifier: "showProductMLDetails", sender: nil)
+
+        if let dataImage = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer), let dataProvider = CGDataProvider(data: dataImage as CFData), let cgImageRef = CGImage(jpegDataProviderSource: dataProvider, decode: nil, shouldInterpolate: true, intent: .defaultIntent) {
+
+            let image = UIImage(cgImage: cgImageRef, scale: 1.0, orientation: UIImage.Orientation.right)
+
+            capturedImage = image
+            guard let pixelBuffer = buffer(from: image) else { return }
+
+            if let output = try? ShoesAndHandbagsPhase2().prediction(image: pixelBuffer) {
+                predictionOutput = output
+                performSegue(withIdentifier: "showProductMLDetails", sender: nil)
+            }
+            else {
+                print("error")
+                return
+            }
+        }
+        else {
+            print("some error here")
+        }
+
     }
+    
+    func buffer(from image: UIImage) -> CVPixelBuffer? {
+        let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
+        var pixelBuffer : CVPixelBuffer?
+        let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(image.size.width), Int(image.size.height), kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
+        guard (status == kCVReturnSuccess) else {
+            return nil
+        }
+        
+        CVPixelBufferLockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer!)
+        
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+        let context = CGContext(data: pixelData, width: Int(image.size.width), height: Int(image.size.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
+        
+        context?.translateBy(x: 0, y: image.size.height)
+        context?.scaleBy(x: 1.0, y: -1.0)
+        
+        UIGraphicsPushContext(context!)
+        image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
+        UIGraphicsPopContext()
+        CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        
+        return pixelBuffer
+    }
+
 }

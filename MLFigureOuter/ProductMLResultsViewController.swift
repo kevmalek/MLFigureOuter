@@ -9,11 +9,12 @@
 import UIKit
 
 class ProductMLResultsViewController: UIViewController {
-    var predictionOutput: ShoesAndHandbagsPhase2Output?
+    var predictionOutput: ShoesAndHandbagsPhase2Output!
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(predictionOutput.classLabel)
 
         // Do any additional setup after loading the view.
     }
@@ -24,6 +25,9 @@ class ProductMLResultsViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        if let resultsTVC = segue.destination as? ProductMLResultsTableViewController {
+            resultsTVC.predictionOutput = predictionOutput
+        }
         
     }
 
