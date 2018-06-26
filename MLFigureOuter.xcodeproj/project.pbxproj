@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F0D4ECC20E2AAF200EC80B7 /* ProductMLResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0D4ECB20E2AAF200EC80B7 /* ProductMLResultsViewController.swift */; };
+		0FA1C61E20E1AB070071FF53 /* ShoesAndHandbagsPhase2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 0FA1C61D20E1AB070071FF53 /* ShoesAndHandbagsPhase2.mlmodel */; };
+		0FA1C62020E1AB0D0071FF53 /* ShoesOrHandbags.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 0FA1C61F20E1AB0D0071FF53 /* ShoesOrHandbags.mlmodel */; };
+		0FA1C62220E1B4F20071FF53 /* PhotographViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA1C62120E1B4F20071FF53 /* PhotographViewController.swift */; };
 		0FED0CF420E1A8840093D1EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FED0CF320E1A8840093D1EB /* AppDelegate.swift */; };
 		0FED0CF620E1A8840093D1EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FED0CF520E1A8840093D1EB /* ViewController.swift */; };
 		0FED0CF920E1A8840093D1EB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FED0CF720E1A8840093D1EB /* Main.storyboard */; };
@@ -15,6 +19,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F0D4ECB20E2AAF200EC80B7 /* ProductMLResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductMLResultsViewController.swift; sourceTree = "<group>"; };
+		0FA1C61D20E1AB070071FF53 /* ShoesAndHandbagsPhase2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ShoesAndHandbagsPhase2.mlmodel; sourceTree = "<group>"; };
+		0FA1C61F20E1AB0D0071FF53 /* ShoesOrHandbags.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ShoesOrHandbags.mlmodel; sourceTree = "<group>"; };
+		0FA1C62120E1B4F20071FF53 /* PhotographViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotographViewController.swift; sourceTree = "<group>"; };
 		0FED0CF020E1A8840093D1EB /* MLFigureOuter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MLFigureOuter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FED0CF320E1A8840093D1EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0FED0CF520E1A8840093D1EB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -57,9 +65,13 @@
 				0FED0CF320E1A8840093D1EB /* AppDelegate.swift */,
 				0FED0CF520E1A8840093D1EB /* ViewController.swift */,
 				0FED0CF720E1A8840093D1EB /* Main.storyboard */,
+				0FA1C62120E1B4F20071FF53 /* PhotographViewController.swift */,
+				0FA1C61D20E1AB070071FF53 /* ShoesAndHandbagsPhase2.mlmodel */,
+				0FA1C61F20E1AB0D0071FF53 /* ShoesOrHandbags.mlmodel */,
 				0FED0CFA20E1A8850093D1EB /* Assets.xcassets */,
 				0FED0CFC20E1A8850093D1EB /* LaunchScreen.storyboard */,
 				0FED0CFF20E1A8850093D1EB /* Info.plist */,
+				0F0D4ECB20E2AAF200EC80B7 /* ProductMLResultsViewController.swift */,
 			);
 			path = MLFigureOuter;
 			sourceTree = "<group>";
@@ -136,7 +148,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0FED0CF620E1A8840093D1EB /* ViewController.swift in Sources */,
+				0FA1C61E20E1AB070071FF53 /* ShoesAndHandbagsPhase2.mlmodel in Sources */,
+				0FA1C62020E1AB0D0071FF53 /* ShoesOrHandbags.mlmodel in Sources */,
 				0FED0CF420E1A8840093D1EB /* AppDelegate.swift in Sources */,
+				0F0D4ECC20E2AAF200EC80B7 /* ProductMLResultsViewController.swift in Sources */,
+				0FA1C62220E1B4F20071FF53 /* PhotographViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
